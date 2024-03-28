@@ -1,0 +1,294 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1000px;
+                 height: 700px;
+                 background-color: #222222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+              position: absolute;
+        top: 50rem;
+        right: 20rem;
+        width: 1000px;
+        height: 700px;
+        background-color: rgba(200, 200, 200, 0);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body style="display: flex; flex-direction: row">
+        <nav
+          style="
+            display: flex;
+            flex-direction: column;
+            width: 10rem;
+            justify-content: space-evenly;
+          ">
+          <style>
+                  * {
+        margin: 0;
+        padding: 0;
+      }
+
+      .canvas {
+        height: 100vh !important;
+          width: auto;
+        background-color: white !important;
+        border: 1px solid lightgray;
+        position: relative;
+        float: left;
+      }
+                  .butt {
+            background-color: rgb(255, 255, 255);
+            height: 100%;
+            border-bottom: #222222 solid 2px;
+          }
+    
+          .butt:hover {
+            background-color: rgb(0, 0, 0);
+            font-size: larger;
+            color: white;
+          }
+          a {
+              color: inherit;
+              text-decoration: none;
+          }
+    
+        a:hover {
+            color: inherit; 
+            text-decoration:none; 
+            cursor:pointer;  
+        }
+          </style>
+          <a href="./v2017.html" id="2017" class="butt">2017</a>
+          <a href="./v2018.html" id="2018" class="butt">2018</a>
+          <a href="./v2019.html" id="2019" class="butt">2019</a>
+          <a href="./v2020.html" id="2020" class="butt">2020</a>
+          <a href="./v2021.html" id="2021" class="butt">2021</a>
+          <a href="./v2022.html" id="2022" class="butt">2022</a>
+          <a href="./v2023.html" id="2023" class="butt">2023</a>
+          <a href="./v2024.html" id="2024" class="butt">2024</a>
+        </nav>
+        <div id="mynetwork" class="card-body canvas">
+        </div>
+        <div id="loadingBar">
+          <div class="outerBorder">
+            <div id="text">0%</div>
+            <div id="border">
+              <div id="bar"></div>
+            </div>
+          </div>
+        </div>
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"betweenness_centrality": 0.0, "closeness_centrality": 0.1034222987516143, "degree_centrality": 0.009900990099009901, "font": {"color": "black"}, "group": 0, "id": "Nocturnus", "label": "Nocturnus", "shape": "dot", "size": 1}, {"betweenness_centrality": 0.01929042904290429, "closeness_centrality": 0.15346534653465346, "degree_centrality": 0.0891089108910891, "font": {"color": "black"}, "group": 0, "id": "Wannamine", "label": "Wannamine", "shape": "dot", "size": 9}, {"betweenness_centrality": 0.012343234323432347, "closeness_centrality": 0.13789639833548573, "degree_centrality": 0.07920792079207921, "font": {"color": "black"}, "group": 0, "id": "EternalBlue", "label": "EternalBlue", "shape": "dot", "size": 8}, {"betweenness_centrality": 0.0003696369636963697, "closeness_centrality": 0.11746730228578413, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 0, "id": "NotPetya", "label": "NotPetya", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.001610561056105611, "closeness_centrality": 0.1303404313034043, "degree_centrality": 0.04950495049504951, "font": {"color": "black"}, "group": 0, "id": "SMB", "label": "SMB", "shape": "dot", "size": 5}, {"betweenness_centrality": 0.02527722772277228, "closeness_centrality": 0.16404916353704335, "degree_centrality": 0.07920792079207921, "font": {"color": "black"}, "group": 1, "id": "WMI", "label": "WMI", "shape": "dot", "size": 8}, {"betweenness_centrality": 0.00783828382838284, "closeness_centrality": 0.13992428654630168, "degree_centrality": 0.04950495049504951, "font": {"color": "black"}, "group": 0, "id": "IP", "label": "IP", "shape": "dot", "size": 5}, {"betweenness_centrality": 0.017633663366336632, "closeness_centrality": 0.15598117188768057, "degree_centrality": 0.06930693069306931, "font": {"color": "black"}, "group": 0, "id": "PingCastle", "label": "PingCastle", "shape": "dot", "size": 7}, {"betweenness_centrality": 0.00040264026402640264, "closeness_centrality": 0.12198527545062197, "degree_centrality": 0.0297029702970297, "font": {"color": "black"}, "group": 0, "id": "n\u2019t", "label": "n\u2019t", "shape": "dot", "size": 3}, {"betweenness_centrality": 0.0, "closeness_centrality": 0.1034222987516143, "degree_centrality": 0.009900990099009901, "font": {"color": "black"}, "group": 0, "id": "IPs", "label": "IPs", "shape": "dot", "size": 1}, {"betweenness_centrality": 0.0003696369636963697, "closeness_centrality": 0.11193942923704134, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 0, "id": "NSA", "label": "NSA", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.0, "closeness_centrality": 0.09610961096109612, "degree_centrality": 0.009900990099009901, "font": {"color": "black"}, "group": 0, "id": "Microsoft", "label": "Microsoft", "shape": "dot", "size": 1}, {"betweenness_centrality": 0.0, "closeness_centrality": 0.1069084436533541, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 0, "id": "i17", "label": "i17", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.005528052805280532, "closeness_centrality": 0.13215071507150716, "degree_centrality": 0.039603960396039604, "font": {"color": "black"}, "group": 0, "id": "WannaCry", "label": "WannaCry", "shape": "dot", "size": 4}, {"betweenness_centrality": 0.04170627062706272, "closeness_centrality": 0.1762009534286762, "degree_centrality": 0.1188118811881188, "font": {"color": "black"}, "group": 1, "id": "PowerShell", "label": "PowerShell", "shape": "dot", "size": 12}, {"betweenness_centrality": 0.00452805280528053, "closeness_centrality": 0.14416441644164418, "degree_centrality": 0.04950495049504951, "font": {"color": "black"}, "group": 0, "id": "WannaMine", "label": "WannaMine", "shape": "dot", "size": 5}, {"betweenness_centrality": 0.0, "closeness_centrality": 0.12686468646864688, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 1, "id": "Notice the Get-WmiObject", "label": "Notice the Get-WmiObject", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.0031881188118811888, "closeness_centrality": 0.11746730228578413, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 1, "id": "base64\u2019d", "label": "base64\u2019d", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.0013201320132013204, "closeness_centrality": 0.11603477420912822, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 1, "id": "ASCII", "label": "ASCII", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.0, "closeness_centrality": 0.11327204148986328, "degree_centrality": 0.009900990099009901, "font": {"color": "black"}, "group": 1, "id": "Mimikatz", "label": "Mimikatz", "shape": "dot", "size": 1}, {"betweenness_centrality": 0.0, "closeness_centrality": 0.11746730228578413, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 1, "id": "GitHub", "label": "GitHub", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.0036798679867986804, "closeness_centrality": 0.12356949980712358, "degree_centrality": 0.039603960396039604, "font": {"color": "black"}, "group": 1, "id": "PowerShell Mimikatz", "label": "PowerShell Mimikatz", "shape": "dot", "size": 4}, {"betweenness_centrality": 0.0, "closeness_centrality": 0.11327204148986328, "degree_centrality": 0.009900990099009901, "font": {"color": "black"}, "group": 1, "id": "CPU", "label": "CPU", "shape": "dot", "size": 1}, {"betweenness_centrality": 0.0031881188118811888, "closeness_centrality": 0.11746730228578413, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 1, "id": "WmiClass", "label": "WmiClass", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.0025544554455445546, "closeness_centrality": 0.11193942923704134, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 1, "id": "in6.ps1", "label": "in6.ps1", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.0025544554455445546, "closeness_centrality": 0.11193942923704134, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 1, "id": "@($mon", "label": "@($mon", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.00044554455445544556, "closeness_centrality": 0.11327204148986328, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 1, "id": "mimi", "label": "mimi", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.00019801980198019803, "closeness_centrality": 0.0942064503480051, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 1, "id": "base64", "label": "base64", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.0007095709570957095, "closeness_centrality": 0.1069084436533541, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 1, "id": "DLL", "label": "DLL", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.0, "closeness_centrality": 0.10455880752910456, "degree_centrality": 0.009900990099009901, "font": {"color": "black"}, "group": 0, "id": "Github", "label": "Github", "shape": "dot", "size": 1}, {"betweenness_centrality": 0.0009075907590759076, "closeness_centrality": 0.11063780796684318, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 1, "id": "NTLM", "label": "NTLM", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.00019801980198019803, "closeness_centrality": 0.0942064503480051, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 1, "id": "Convert]::FromBase64String($funs)));Invoke-Command", "label": "Convert]::FromBase64String($funs)));Invoke-Command", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.02732673267326733, "closeness_centrality": 0.09944855245018173, "degree_centrality": 0.039603960396039604, "font": {"color": "black"}, "group": 5, "id": "Bitcoin", "label": "Bitcoin", "shape": "dot", "size": 4}, {"betweenness_centrality": 0.0, "closeness_centrality": 0.08697161229038033, "degree_centrality": 0.009900990099009901, "font": {"color": "black"}, "group": 5, "id": "Coin", "label": "Coin", "shape": "dot", "size": 1}, {"betweenness_centrality": 0.0, "closeness_centrality": 0.08697161229038033, "degree_centrality": 0.009900990099009901, "font": {"color": "black"}, "group": 5, "id": "Investopedia", "label": "Investopedia", "shape": "dot", "size": 1}, {"betweenness_centrality": 0.0013861386138613863, "closeness_centrality": 0.0990307013894667, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 5, "id": "SonicWall", "label": "SonicWall", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.03762376237623763, "closeness_centrality": 0.1135870213527377, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 5, "id": "Cado Labs", "label": "Cado Labs", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.039603960396039604, "closeness_centrality": 0.13094059405940595, "degree_centrality": 0.0297029702970297, "font": {"color": "black"}, "group": 6, "id": "LogRhythm", "label": "LogRhythm", "shape": "dot", "size": 3}, {"betweenness_centrality": 0.0, "closeness_centrality": 0.11013694827426668, "degree_centrality": 0.009900990099009901, "font": {"color": "black"}, "group": 6, "id": "Sally Vincent", "label": "Sally Vincent", "shape": "dot", "size": 1}, {"betweenness_centrality": 0.17904290429042904, "closeness_centrality": 0.15818326799122867, "degree_centrality": 0.039603960396039604, "font": {"color": "black"}, "group": 6, "id": "SOC", "label": "SOC", "shape": "dot", "size": 4}, {"betweenness_centrality": 0.013465346534653467, "closeness_centrality": 0.11065402314879376, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 6, "id": "Vincent", "label": "Vincent", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.0, "closeness_centrality": 0.08827455779285795, "degree_centrality": 0.009900990099009901, "font": {"color": "black"}, "group": 2, "id": "Google\u2019s Cybersecurity Action Team", "label": "Google\u2019s Cybersecurity Action Team", "shape": "dot", "size": 1}, {"betweenness_centrality": 0.013465346534653467, "closeness_centrality": 0.10115582373688013, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 2, "id": "Guy Arazi", "label": "Guy Arazi", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.026534653465346537, "closeness_centrality": 0.11784653465346534, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 2, "id": "Palo Alto Networks", "label": "Palo Alto Networks", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.03920792079207921, "closeness_centrality": 0.1402934936350778, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 2, "id": "Matt Muir", "label": "Matt Muir", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.1922442244224423, "closeness_centrality": 0.1720387367203874, "degree_centrality": 0.039603960396039604, "font": {"color": "black"}, "group": 2, "id": "Cado Security", "label": "Cado Security", "shape": "dot", "size": 4}, {"betweenness_centrality": 0.20455445544554457, "closeness_centrality": 0.18270780566428735, "degree_centrality": 0.039603960396039604, "font": {"color": "black"}, "group": 2, "id": "Docker", "label": "Docker", "shape": "dot", "size": 4}, {"betweenness_centrality": 0.007887788778877889, "closeness_centrality": 0.1394633546194856, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 2, "id": "CTO", "label": "CTO", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.1452145214521452, "closeness_centrality": 0.15871587158715872, "degree_centrality": 0.04950495049504951, "font": {"color": "black"}, "group": 5, "id": "Redis", "label": "Redis", "shape": "dot", "size": 5}, {"betweenness_centrality": 0.21597359735973595, "closeness_centrality": 0.1765491155857159, "degree_centrality": 0.1188118811881188, "font": {"color": "black"}, "group": 2, "id": "Linux", "label": "Linux", "shape": "dot", "size": 12}, {"betweenness_centrality": 0.01957095709570957, "closeness_centrality": 0.16033542129723177, "degree_centrality": 0.039603960396039604, "font": {"color": "black"}, "group": 2, "id": "SSH", "label": "SSH", "shape": "dot", "size": 4}, {"betweenness_centrality": 0.024752475247524754, "closeness_centrality": 0.13167210575806185, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 5, "id": "ReasonLabs", "label": "ReasonLabs", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.04930693069306931, "closeness_centrality": 0.1324118366892869, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 5, "id": "Docker Engine API", "label": "Docker Engine API", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.04386138613861386, "closeness_centrality": 0.13315992616210776, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 7, "id": "WatchDog", "label": "WatchDog", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.030858085808580855, "closeness_centrality": 0.15304744760190306, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 5, "id": "Jupyter", "label": "Jupyter", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.01306930693069307, "closeness_centrality": 0.11304223947574614, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 5, "id": "Trojans", "label": "Trojans", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.03257425742574257, "closeness_centrality": 0.11469249114692491, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 7, "id": "TrendMicro", "label": "TrendMicro", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.02128712871287129, "closeness_centrality": 0.10072353389185074, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 7, "id": "Kinsig", "label": "Kinsig", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.01075907590759076, "closeness_centrality": 0.0903038579720041, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 7, "id": "Alibaba Elastic Computing Service", "label": "Alibaba Elastic Computing Service", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.005313531353135313, "closeness_centrality": 0.0853960396039604, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 7, "id": "ECS", "label": "ECS", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.008811881188118813, "closeness_centrality": 0.08877328410807182, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 7, "id": "Log4Shell", "label": "Log4Shell", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.018514851485148514, "closeness_centrality": 0.09779795406926585, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 7, "id": "Sophos", "label": "Sophos", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.029801980198019804, "closeness_centrality": 0.11091438555620269, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 7, "id": "VMware Horizon", "label": "VMware Horizon", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.04108910891089109, "closeness_centrality": 0.1280940594059406, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 4, "id": "JavaX", "label": "JavaX", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.07772277227722772, "closeness_centrality": 0.15157110566362103, "degree_centrality": 0.0297029702970297, "font": {"color": "black"}, "group": 4, "id": "XMRig", "label": "XMRig", "shape": "dot", "size": 3}, {"betweenness_centrality": 0.025577557755775582, "closeness_centrality": 0.1313053310902121, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 4, "id": "Jin", "label": "Jin", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.019042904290429045, "closeness_centrality": 0.12025156597292383, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 4, "id": "Mimu", "label": "Mimu", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.025841584158415844, "closeness_centrality": 0.1163916391639164, "degree_centrality": 0.0297029702970297, "font": {"color": "black"}, "group": 4, "id": "JavaScript", "label": "JavaScript", "shape": "dot", "size": 3}, {"betweenness_centrality": 0.005841584158415842, "closeness_centrality": 0.10762240607622406, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 4, "id": "WhiteSource", "label": "WhiteSource", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.023894389438943897, "closeness_centrality": 0.1163916391639164, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 4, "id": "Shut", "label": "Shut", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.009372937293729374, "closeness_centrality": 0.11143880345481358, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 4, "id": "Mend", "label": "Mend", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.017392739273927392, "closeness_centrality": 0.12503611103815954, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 4, "id": "npm", "label": "npm", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.027590759075907596, "closeness_centrality": 0.14415478245072216, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 4, "id": "Romanian", "label": "Romanian", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.0, "closeness_centrality": 0.14155739898314157, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 2, "id": "Monero", "label": "Monero", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.0, "closeness_centrality": 0.14071228018324222, "degree_centrality": 0.009900990099009901, "font": {"color": "black"}, "group": 2, "id": "VMware", "label": "VMware", "shape": "dot", "size": 1}, {"betweenness_centrality": 0.05283828382838284, "closeness_centrality": 0.1463932107496464, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 3, "id": "CoinStop", "label": "CoinStop", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.00976897689768977, "closeness_centrality": 0.1419837766909221, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 2, "id": "Germany", "label": "Germany", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.0, "closeness_centrality": 0.14071228018324222, "degree_centrality": 0.009900990099009901, "font": {"color": "black"}, "group": 2, "id": "Cado Security Labs", "label": "Cado Security Labs", "shape": "dot", "size": 1}, {"betweenness_centrality": 0.0, "closeness_centrality": 0.14071228018324222, "degree_centrality": 0.009900990099009901, "font": {"color": "black"}, "group": 2, "id": "Abyss Locker", "label": "Abyss Locker", "shape": "dot", "size": 1}, {"betweenness_centrality": 0.009801980198019802, "closeness_centrality": 0.1424127306990518, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 2, "id": "the Cado Security Labs", "label": "the Cado Security Labs", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.003498349834983499, "closeness_centrality": 0.1313053310902121, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 2, "id": "China", "label": "China", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.04194719471947195, "closeness_centrality": 0.12503611103815954, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 3, "id": "Asian", "label": "Asian", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.03135313531353136, "closeness_centrality": 0.10937033378511866, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 3, "id": "Cado\u2019s Muir", "label": "Cado\u2019s Muir", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.021254125412541257, "closeness_centrality": 0.09779795406926585, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 3, "id": "Darktrace", "label": "Darktrace", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.01392739273927393, "closeness_centrality": 0.09082584559033938, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 3, "id": "Employ", "label": "Employ", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.010561056105610563, "closeness_centrality": 0.08794517511452639, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 3, "id": "Patch", "label": "Patch", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.012475247524752476, "closeness_centrality": 0.08894078087053989, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 3, "id": "harden", "label": "harden", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.020825082508250825, "closeness_centrality": 0.09739383029212012, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 3, "id": "SCA", "label": "SCA", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.03171617161716172, "closeness_centrality": 0.10988021879110989, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 3, "id": "Hunt", "label": "Hunt", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.07267326732673268, "closeness_centrality": 0.12603907449568486, "degree_centrality": 0.039603960396039604, "font": {"color": "black"}, "group": 3, "id": "API", "label": "API", "shape": "dot", "size": 4}, {"betweenness_centrality": 0.0, "closeness_centrality": 0.10664844765019489, "degree_centrality": 0.009900990099009901, "font": {"color": "black"}, "group": 3, "id": "Cryptojacking", "label": "Cryptojacking", "shape": "dot", "size": 1}, {"betweenness_centrality": 0.06607260726072609, "closeness_centrality": 0.13864298194525335, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 6, "id": "Learn", "label": "Learn", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.0, "closeness_centrality": 0.06439701347183899, "degree_centrality": 0.009900990099009901, "font": {"color": "black"}, "group": 6, "id": "C2", "label": "C2", "shape": "dot", "size": 1}, {"betweenness_centrality": 0.013465346534653467, "closeness_centrality": 0.07099188834546105, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 6, "id": "Travis Farral", "label": "Travis Farral", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.026534653465346537, "closeness_centrality": 0.07882711348057883, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 6, "id": "CISO", "label": "CISO", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.03920792079207921, "closeness_centrality": 0.08827455779285795, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 6, "id": "Archaea Energy", "label": "Archaea Energy", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.05148514851485149, "closeness_centrality": 0.0998699446215808, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 6, "id": "Google Cloud", "label": "Google Cloud", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.06336633663366337, "closeness_centrality": 0.11441411131404404, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 6, "id": "Security Command Center", "label": "Security Command Center", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.07485148514851486, "closeness_centrality": 0.13315992616210776, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 6, "id": "Virtual Machine Threat Detection", "label": "Virtual Machine Threat Detection", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.0, "closeness_centrality": 0.09542229526596387, "degree_centrality": 0.009900990099009901, "font": {"color": "black"}, "group": 6, "id": "Javascript", "label": "Javascript", "shape": "dot", "size": 1}, {"betweenness_centrality": 0.00019801980198019803, "closeness_centrality": 0.11873706262313889, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 2, "id": "US", "label": "US", "shape": "dot", "size": 2}, {"betweenness_centrality": 0.0046204620462046205, "closeness_centrality": 0.1342980451891343, "degree_centrality": 0.019801980198019802, "font": {"color": "black"}, "group": 2, "id": "Chris Doman", "label": "Chris Doman", "shape": "dot", "size": 2}]);
+                  edges = new vis.DataSet([{"from": "Nocturnus", "to": "Wannamine", "value": 1, "width": 1}, {"from": "Wannamine", "to": "EternalBlue", "value": 12, "width": 1}, {"from": "Wannamine", "to": "NotPetya", "value": 3, "width": 1}, {"from": "Wannamine", "to": "SMB", "value": 4, "width": 1}, {"from": "Wannamine", "to": "WMI", "value": 14, "width": 1}, {"from": "Wannamine", "to": "IP", "value": 11, "width": 1}, {"from": "Wannamine", "to": "PingCastle", "value": 12, "width": 1}, {"from": "Wannamine", "to": "n\u2019t", "value": 6, "width": 1}, {"from": "Wannamine", "to": "IPs", "value": 9, "width": 1}, {"from": "EternalBlue", "to": "NSA", "value": 2, "width": 1}, {"from": "EternalBlue", "to": "n\u2019t", "value": 9, "width": 1}, {"from": "EternalBlue", "to": "Microsoft", "value": 10, "width": 1}, {"from": "EternalBlue", "to": "SMB", "value": 6, "width": 1}, {"from": "EternalBlue", "to": "i17", "value": 6, "width": 1}, {"from": "EternalBlue", "to": "PingCastle", "value": 6, "width": 1}, {"from": "EternalBlue", "to": "IP", "value": 2, "width": 1}, {"from": "NSA", "to": "WannaCry", "value": 2, "width": 1}, {"from": "WannaCry", "to": "NotPetya", "value": 3, "width": 1}, {"from": "WannaCry", "to": "SMB", "value": 6, "width": 1}, {"from": "WannaCry", "to": "PowerShell", "value": 5, "width": 1}, {"from": "SMB", "to": "WannaMine", "value": 4, "width": 1}, {"from": "SMB", "to": "PingCastle", "value": 11, "width": 1}, {"from": "WannaMine", "to": "n\u2019t", "value": 5, "width": 1}, {"from": "WannaMine", "to": "PowerShell", "value": 6, "width": 1}, {"from": "WannaMine", "to": "WMI", "value": 6, "width": 1}, {"from": "WannaMine", "to": "PingCastle", "value": 11, "width": 1}, {"from": "PowerShell", "to": "Notice the Get-WmiObject", "value": 6, "width": 1}, {"from": "PowerShell", "to": "base64\u2019d", "value": 5, "width": 1}, {"from": "PowerShell", "to": "WMI", "value": 15, "width": 1}, {"from": "PowerShell", "to": "ASCII", "value": 6, "width": 1}, {"from": "PowerShell", "to": "PingCastle", "value": 6, "width": 1}, {"from": "PowerShell", "to": "Mimikatz", "value": 11, "width": 1}, {"from": "PowerShell", "to": "GitHub", "value": 12, "width": 1}, {"from": "PowerShell", "to": "PowerShell Mimikatz", "value": 24, "width": 1}, {"from": "PowerShell", "to": "CPU", "value": 12, "width": 1}, {"from": "PowerShell", "to": "WmiClass", "value": 3, "width": 1}, {"from": "Notice the Get-WmiObject", "to": "WMI", "value": 6, "width": 1}, {"from": "WMI", "to": "in6.ps1", "value": 5, "width": 1}, {"from": "WMI", "to": "@($mon", "value": 6, "width": 1}, {"from": "WMI", "to": "IP", "value": 3, "width": 1}, {"from": "WMI", "to": "mimi", "value": 4, "width": 1}, {"from": "in6.ps1", "to": "base64", "value": 4, "width": 1}, {"from": "base64", "to": "base64\u2019d", "value": 5, "width": 1}, {"from": "ASCII", "to": "DLL", "value": 5, "width": 1}, {"from": "DLL", "to": "PingCastle", "value": 6, "width": 1}, {"from": "PingCastle", "to": "Github", "value": 6, "width": 1}, {"from": "GitHub", "to": "PowerShell Mimikatz", "value": 23, "width": 1}, {"from": "PowerShell Mimikatz", "to": "mimi", "value": 6, "width": 1}, {"from": "PowerShell Mimikatz", "to": "NTLM", "value": 6, "width": 1}, {"from": "WmiClass", "to": "Convert]::FromBase64String($funs)));Invoke-Command", "value": 4, "width": 1}, {"from": "Convert]::FromBase64String($funs)));Invoke-Command", "to": "@($mon", "value": 6, "width": 1}, {"from": "IP", "to": "NTLM", "value": 5, "width": 1}, {"from": "IP", "to": "i17", "value": 6, "width": 1}, {"from": "Bitcoin", "to": "Coin", "value": 2, "width": 1}, {"from": "Bitcoin", "to": "Investopedia", "value": 12, "width": 1}, {"from": "Bitcoin", "to": "SonicWall", "value": 3, "width": 1}, {"from": "Bitcoin", "to": "Cado Labs", "value": 5, "width": 1}, {"from": "LogRhythm", "to": "Sally Vincent", "value": 6, "width": 1}, {"from": "LogRhythm", "to": "SOC", "value": 6, "width": 1}, {"from": "LogRhythm", "to": "Vincent", "value": 6, "width": 1}, {"from": "Google\u2019s Cybersecurity Action Team", "to": "Guy Arazi", "value": 5, "width": 1}, {"from": "Guy Arazi", "to": "Palo Alto Networks", "value": 6, "width": 1}, {"from": "Palo Alto Networks", "to": "Matt Muir", "value": 3, "width": 1}, {"from": "Matt Muir", "to": "Cado Security", "value": 6, "width": 1}, {"from": "Cado Security", "to": "Docker", "value": 10, "width": 1}, {"from": "Cado Security", "to": "SOC", "value": 2, "width": 1}, {"from": "Cado Security", "to": "CTO", "value": 5, "width": 1}, {"from": "Docker", "to": "Redis", "value": 12, "width": 1}, {"from": "Docker", "to": "Linux", "value": 5, "width": 1}, {"from": "Docker", "to": "SSH", "value": 6, "width": 1}, {"from": "Redis", "to": "ReasonLabs", "value": 5, "width": 1}, {"from": "Redis", "to": "Docker Engine API", "value": 6, "width": 1}, {"from": "Redis", "to": "WatchDog", "value": 5, "width": 1}, {"from": "Redis", "to": "Jupyter", "value": 6, "width": 1}, {"from": "ReasonLabs", "to": "Trojans", "value": 6, "width": 1}, {"from": "Trojans", "to": "SonicWall", "value": 5, "width": 1}, {"from": "Cado Labs", "to": "Docker Engine API", "value": 6, "width": 1}, {"from": "WatchDog", "to": "TrendMicro", "value": 4, "width": 1}, {"from": "TrendMicro", "to": "Kinsig", "value": 6, "width": 1}, {"from": "Kinsig", "to": "Alibaba Elastic Computing Service", "value": 6, "width": 1}, {"from": "Alibaba Elastic Computing Service", "to": "ECS", "value": 6, "width": 1}, {"from": "ECS", "to": "Log4Shell", "value": 5, "width": 1}, {"from": "Log4Shell", "to": "Sophos", "value": 5, "width": 1}, {"from": "Sophos", "to": "VMware Horizon", "value": 6, "width": 1}, {"from": "VMware Horizon", "to": "JavaX", "value": 6, "width": 1}, {"from": "JavaX", "to": "XMRig", "value": 6, "width": 1}, {"from": "XMRig", "to": "Jin", "value": 6, "width": 1}, {"from": "XMRig", "to": "Linux", "value": 23, "width": 1}, {"from": "Jin", "to": "Mimu", "value": 6, "width": 1}, {"from": "Mimu", "to": "JavaScript", "value": 5, "width": 1}, {"from": "JavaScript", "to": "WhiteSource", "value": 4, "width": 1}, {"from": "JavaScript", "to": "Shut", "value": 4, "width": 1}, {"from": "WhiteSource", "to": "Mend", "value": 6, "width": 1}, {"from": "Mend", "to": "npm", "value": 6, "width": 1}, {"from": "npm", "to": "Romanian", "value": 5, "width": 1}, {"from": "Romanian", "to": "Linux", "value": 6, "width": 1}, {"from": "Linux", "to": "SSH", "value": 6, "width": 1}, {"from": "Linux", "to": "Monero", "value": 4, "width": 1}, {"from": "Linux", "to": "VMware", "value": 11, "width": 1}, {"from": "Linux", "to": "CoinStop", "value": 5, "width": 1}, {"from": "Linux", "to": "Jupyter", "value": 6, "width": 1}, {"from": "Linux", "to": "Germany", "value": 6, "width": 1}, {"from": "Linux", "to": "Cado Security Labs", "value": 11, "width": 1}, {"from": "Linux", "to": "Abyss Locker", "value": 12, "width": 1}, {"from": "Linux", "to": "the Cado Security Labs", "value": 3, "width": 1}, {"from": "SSH", "to": "Monero", "value": 6, "width": 1}, {"from": "SSH", "to": "China", "value": 5, "width": 1}, {"from": "CoinStop", "to": "Asian", "value": 6, "width": 1}, {"from": "Asian", "to": "Cado\u2019s Muir", "value": 4, "width": 1}, {"from": "Cado\u2019s Muir", "to": "Darktrace", "value": 4, "width": 1}, {"from": "Darktrace", "to": "Employ", "value": 3, "width": 1}, {"from": "Employ", "to": "Patch", "value": 3, "width": 1}, {"from": "Patch", "to": "harden", "value": 6, "width": 1}, {"from": "harden", "to": "SCA", "value": 2, "width": 1}, {"from": "SCA", "to": "Hunt", "value": 5, "width": 1}, {"from": "Hunt", "to": "API", "value": 4, "width": 1}, {"from": "API", "to": "Cryptojacking", "value": 5, "width": 1}, {"from": "API", "to": "Shut", "value": 1, "width": 1}, {"from": "API", "to": "Learn", "value": 6, "width": 1}, {"from": "C2", "to": "Travis Farral", "value": 5, "width": 1}, {"from": "Travis Farral", "to": "CISO", "value": 6, "width": 1}, {"from": "CISO", "to": "Archaea Energy", "value": 6, "width": 1}, {"from": "Archaea Energy", "to": "Google Cloud", "value": 1, "width": 1}, {"from": "Google Cloud", "to": "Security Command Center", "value": 6, "width": 1}, {"from": "Security Command Center", "to": "Virtual Machine Threat Detection", "value": 6, "width": 1}, {"from": "Virtual Machine Threat Detection", "to": "SOC", "value": 3, "width": 1}, {"from": "SOC", "to": "Learn", "value": 4, "width": 1}, {"from": "Vincent", "to": "Javascript", "value": 4, "width": 1}, {"from": "China", "to": "US", "value": 6, "width": 1}, {"from": "US", "to": "Germany", "value": 6, "width": 1}, {"from": "the Cado Security Labs", "to": "Chris Doman", "value": 5, "width": 1}, {"from": "Chris Doman", "to": "CTO", "value": 5, "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
